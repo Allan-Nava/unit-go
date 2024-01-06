@@ -7,7 +7,6 @@ LABEL org.opencontainers.image.source="https://github.com/Dockerfile.python3.9"
 LABEL org.opencontainers.image.documentation="https://unit.nginx.org/installation/#docker-images"
 LABEL org.opencontainers.image.version="1.31.1"
 
-
 RUN set -ex \
     && savedAptMark="$(apt-mark showmanual)" \
     && apt-get update \
@@ -47,12 +46,12 @@ RUN set -ex \
     && make clean \
     && /bin/true \
     && ./configure $CONFIGURE_ARGS_MODULES --cc-opt="$CC_OPT" --modulesdir=/usr/lib/unit/debug-modules --debug \
-    && ./configure python --config=/usr/local/bin/python3-config \
-    && make -j $NCPU python3-install \
+    && ./configure go --go-path=$GOPATH \
+    && make -j $NCPU go-install-src libunit-install \
     && make clean \
     && ./configure $CONFIGURE_ARGS_MODULES --cc-opt="$CC_OPT" --modulesdir=/usr/lib/unit/modules \
-    && ./configure python --config=/usr/local/bin/python3-config \
-    && make -j $NCPU python3-install \
+    && ./configure go --go-path=$GOPATH \
+    && make -j $NCPU go-install-src libunit-install \
     && cd \
     && rm -rf /usr/src/unit \
     && for f in /usr/sbin/unitd /usr/lib/unit/modules/*.unit.so; do \
